@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Automation Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Business Automation Assistant</h1>
+        </header>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="status-section card">
+            <h2>Configuration Status</h2>
+            <p class="status-item {% if gemini_configured %}status-ok{% else %}status-pending{% endif %}">
+                Gemini API: {% if gemini_configured %}Configured ✔{% else %}Needs Configuration ✖{% endif %}
+            </p>
+            <p class="status-item {% if google_authenticated %}status-ok{% else %}status-pending{% endif %}">
+                Google Account: {% if google_authenticated %}Authenticated ✔{% else %}Needs Authentication ✖{% endif %}
+            </p>
+        </div>
+
+        {% if not gemini_configured %}
+        <div class="config-section card">
+            <h2>Step 1: Configure Gemini API Key</h2>
+            <form method="POST" action="{{ url_for('index') }}">
+                <input type="password" name="gemini_api_key" placeholder="Enter your Gemini API Key" required>
+                <button type="submit">Set API Key</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if gemini_configured and not google_authenticated %}
+        <div class="auth-section card">
+            <h2>Step 2: Authenticate with Google</h2>
+            <p>Allow the application to access your Gmail and Calendar.</p>
+            <a href="{{ url_for('authorize_google') }}" class="button">Authenticate with Google</a>
+        </div>
+        {% endif %}
+
+        {% if gemini_configured and google_authenticated %}
+        <div class="dashboard-section card">
+            <h2>Dashboard</h2>
+            <p>Configuration complete. You can now use the features.</p>
+            <hr>
+            <div class="feature">
+                <h3>Email Summary</h3>
+                <button id="summarize-btn">Summarize Recent Emails</button>
+                <div id="summary-loading" class="loading-message" style="display: none;">Loading summary...</div>
+                <div id="summary-error" class="error-message" style="display: none;"></div>
+                <div id="summary-result" class="summary-box" style="display: none;">
+                    <h4>Summary:</h4>
+                    <pre></pre> {/* Use pre for formatted text */}
+                </div>
+            </div>
+            <hr>
+            <div class="feature">
+                <h3>Schedule Meeting (Placeholder)</h3>
+                <p>Functionality to schedule meetings via Google Calendar will be added here.</p>
+                <button disabled>Schedule</button>
+            </div>
+             <hr>
+            <div class="feature">
+                <h3>Generate Follow-up (Placeholder)</h3>
+                <p>Functionality to generate follow-up emails will be added here.</p>
+                 <button disabled>Generate</button>
+            </div>
+            <!-- Add placeholders for other features -->
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
