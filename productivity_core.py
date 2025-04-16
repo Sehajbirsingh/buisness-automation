@@ -43,7 +43,7 @@ calendar_service = build('calendar', 'v3', credentials=creds)
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 
 # Load Gemini Model
-os.environ["GOOGLE_API_KEY"] = "AIzaSyD4a5CQZDdPj9wGlBXJy4pnOCkbBCXPZcI"
+os.environ["GOOGLE_API_KEY"] = "Your_api_key"
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.2)
 embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
